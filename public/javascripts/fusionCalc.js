@@ -14,6 +14,10 @@ for (i = 1; i <= 5; i++) {
     var hand = document.getElementById("hand" + i);
     handCompletions["hand" + i] = new Awesomplete(hand, _awesompleteOpts);
 }
+for (i = 1; i <= 5; i++) {
+    var field = document.getElementById("field" + i);
+    handCompletions["field" + i] = new Awesomplete(field, _awesompleteOpts);
+}
 
 // Creates a div for each fusion
 function fusesToHTML(fuselist) {
@@ -93,6 +97,14 @@ function findFusions() {
         }
     }
 
+    for (i = 1; i <= 5; i++) {
+        var name = $("#field" + i).val();
+        var card = getCardByName(name);
+        if (card) {
+            cards.push(card);
+        }
+    }
+
     var fuses = [];
     var equips = [];
 
@@ -129,6 +141,15 @@ function inputsClear() {
     for (i = 1; i <= 5; i++) {
         $("#hand" + i).val("");
         $("#hand" + i + "-info").html("");
+        $("#clear-" + this.id).css("display", "none");
+    }
+}
+
+function fieldInputsClear() {
+    for (i = 1; i <= 5; i++) {
+        $("#field" + i).val("");
+        $("#field" + i + "-info").html("");
+        $("#clear-" + this.id).css("display", "none");
     }
 }
 
@@ -139,8 +160,24 @@ for (i = 1; i <= 5; i++) {
         if (this.value === "") {
             // If the box is cleared, remove the card info
             $("#" + this.id + "-info").html("");
+            $("#clear-" + this.id).css("display", "none");
         } else {
             checkCard(this.value, this.id + "-info");
+            $("#clear-" + this.id).css("display", "inline");
+        }
+        resultsClear();
+        findFusions();
+    });
+
+    $("#field" + i).on("change", function () {
+        handCompletions[this.id].select(); // select the currently highlighted element
+        if (this.value === "") {
+            // If the box is cleared, remove the card info
+            $("#clear-" + this.id).html("");
+            $("#clear-" + this.id).css("display", "none");
+        } else {
+            checkCard(this.value, this.id + "-info");
+            $("#clear-" + this.id).css("display", "inline");
         }
         resultsClear();
         findFusions();
@@ -151,9 +188,36 @@ for (i = 1; i <= 5; i++) {
         resultsClear();
         findFusions();
     });
+
+    $("#field" + i).on("awesomplete-selectcomplete", function () {
+        checkCard(this.value, this.id + "-info");
+        resultsClear();
+        findFusions();
+    });
+    $("#clear-hand" + i).on("click", function () {
+        const id = this.id.replace("clear-", "");
+        $("#" + id).val("");
+        $("#" + id + "-info").html("");
+        $("#clear-" + id).css("display", "none");
+        resultsClear();
+        findFusions();
+    });
+    $("#clear-field" + i).on("click", function () {
+        const id = this.id.replace("clear-", "");
+        $("#" + id).val("");
+        $("#" + id + "-info").html("");
+        $("#clear-" + id).css("display", "none");
+        resultsClear();
+        findFusions();
+    });
 }
 
 $("#resetBtn").on("click", function () {
     resultsClear();
     inputsClear();
+});
+
+$("#resetFieldBtn").on("click", function () {
+    resultsClear();
+    fieldInputsClear();
 });
