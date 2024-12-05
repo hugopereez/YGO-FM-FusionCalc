@@ -141,15 +141,19 @@ function inputsClear() {
     for (i = 1; i <= 5; i++) {
         $("#hand" + i).val("");
         $("#hand" + i + "-info").html("");
-        $("#clear-" + this.id).css("display", "none");
+        toggleRemoveBtn(this.id, "none");
     }
+}
+
+function toggleRemoveBtn(id, display) {
+    $("#clear-" + id).css("display", display);
 }
 
 function fieldInputsClear() {
     for (i = 1; i <= 5; i++) {
         $("#field" + i).val("");
         $("#field" + i + "-info").html("");
-        $("#clear-" + this.id).css("display", "none");
+        toggleRemoveBtn(this.id, "none");
     }
 }
 
@@ -160,10 +164,10 @@ for (i = 1; i <= 5; i++) {
         if (this.value === "") {
             // If the box is cleared, remove the card info
             $("#" + this.id + "-info").html("");
-            $("#clear-" + this.id).css("display", "none");
+            toggleRemoveBtn(this.id, "none");
         } else {
             checkCard(this.value, this.id + "-info");
-            $("#clear-" + this.id).css("display", "inline");
+            // toggleRemoveBtn(this.id, "inline");
         }
         resultsClear();
         findFusions();
@@ -174,10 +178,9 @@ for (i = 1; i <= 5; i++) {
         if (this.value === "") {
             // If the box is cleared, remove the card info
             $("#clear-" + this.id).html("");
-            $("#clear-" + this.id).css("display", "none");
+            toggleRemoveBtn(this.id, "none");
         } else {
             checkCard(this.value, this.id + "-info");
-            $("#clear-" + this.id).css("display", "inline");
         }
         resultsClear();
         findFusions();
@@ -185,12 +188,13 @@ for (i = 1; i <= 5; i++) {
 
     $("#hand" + i).on("awesomplete-selectcomplete", function () {
         checkCard(this.value, this.id + "-info");
+        toggleRemoveBtn(this.id, "inline");
         resultsClear();
         findFusions();
     });
 
     $("#field" + i).on("awesomplete-selectcomplete", function () {
-        checkCard(this.value, this.id + "-info");
+        toggleRemoveBtn(this.id, "inline");
         resultsClear();
         findFusions();
     });
